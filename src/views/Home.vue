@@ -38,8 +38,16 @@
 				</div>
 				<!-- Ending -->
 				<div v-else>
-					<h1>You Lose!! {{ msg }}</h1>
-					<button @click="restart">New Game</button>
+					<div class="win" v-if='winner'>
+					<h1>Congrats! The other player did worse than you</h1>
+					<h2>your final score: {{endScore}}</h2>
+					<img src="https://media.giphy.com/media/vvW9GuxsGM4lcjqypz/giphy.gif" alt="snakegif">
+					</div>
+					<div class="lose" v-if='loser'>
+					<h1>You lost. Did you even try?</h1>
+					<h2>your final score: {{endScore}}</h2>
+					<img src="https://media1.tenor.com/images/cf63da2d1dc7eb847d2fb7bcff3b9b00/tenor.gif" alt="snakegif">
+					</div>
 				</div>
 			  </div>
 		  </div>
@@ -50,7 +58,7 @@
 <script>
 // @ is an alias to /src
 import HelloWorld from '@/components/HelloWorld.vue'
-
+import database from '../assets/config'
 //import components list_player.vue
 import mylistplayer from '@/components/list_player.vue'
 
@@ -61,6 +69,8 @@ export default {
   },
   data: function(){
 		return {
+			room: '',
+			player_id: '',
 			total : 12,
 			head: {},
 			snake: [],
@@ -76,13 +86,38 @@ export default {
 			interval: null,
 			intervalBooster: null,
 			gameOver: false,
-			msg: ''
+			msg: '',
+			winner: false,
+			loser: false
 		}
 	},
 
 	created: function(){
 		this.init();
+		this.player_id = localStorage.getItem('user_id')
+		this.room = localStorage.getItem('room')
 
+		let ref = database.ref('room/' + localStorage.getItem('room') + '/users')
+		ref.on('value', function(snapshot) {
+			console.log('status aupdated');
+			
+			var changed = snapshot.val()
+			if (localStorage.getItem('user_id') === Object.keys(changed)[0]) {
+				if (Object.values(changed)[1].status === 'death') {
+				self.winner = true
+				} 
+				else if (Object.values(changed)[0].status === 'death') {
+				self.gameOver = true
+				} 
+			} else if (localStorage.getItem('user_id') === Object.keys(changed)[1]) {
+				if (Object.values(changed)[0].status === 'death') {
+				self.winner = true
+				} 
+				else if (Object.values(changed)[1].status === 'death') {
+				self.gameOver = true
+				} 
+		}
+		})
 	},
 	destroyed: function(){
 		window.removeEventListener('keydown', this.changeDirection);
@@ -180,6 +215,7 @@ export default {
 				this.playAudio('Bomb-SoundBible.com-891110113.mp3')
 				self.msg = 'Game Over!, you eat a bomb stupid...'
 				self.gameOver = true
+				self.updateWinStatus()
 				clearInterval(this.interval)
 				this.$emit('gameOver', this.score)
 				this.$router.replace('/ending')
@@ -228,6 +264,7 @@ export default {
 				if(this.snake[i] != undefined && this.snake[i].x == x && this.snake[i].y == y){
 					self.msg = 'Game over. due to you eat yourself,  Your score: ' + this.score
 					self.gameOver = true;
+					self.updateWinStatus()
 					clearInterval(this.interval)
 					this.$emit('gameOver', this.score)
 					this.$router.replace('/ending')
@@ -299,6 +336,7 @@ export default {
 			}
 		},
 		eat(){
+			let self = this;
 			this.playAudio('Bite-SoundBible.com-2056759375.mp3')
 			this.snakeLenth += 1;
 			this.food = this.getRand();
@@ -316,7 +354,26 @@ export default {
 						(self.food.x == (self.bomb[2].x) && self.food.y == (self.bomb[2].y)) ||
 						(self.food.x == (self.bomb[3].x) && self.food.y == (self.bomb[3].y)) ) {
 						self.food = self.getRand()
+
 			}
+			let userlist = database.ref('room/' + self.room + '/users')
+				userlist.on('value', function (snapshot) {
+				let getStat = snapshot.val()
+				let val = self.snakeLenth-1
+				console.log('ini get stat', val, 'room:', self.room);
+				
+				if (localStorage.getItem('user_id') === Object.keys(getStat)[0]) {
+					let score = database.ref('room/' + self.room + '/users/' + Object.keys(getStat)[0])
+					score.update({
+					score: val
+					})
+				} else {
+					let score = database.ref('room/' + self.room + '/users/' + Object.keys(getStat)[1])
+					score.update({
+					score: val
+					})
+				}
+			})
 		},
 		poisoned() {
 			this.playAudio('Toxic Goo-SoundBible.com-392739082.mp3')
@@ -375,7 +432,33 @@ export default {
     changeDifficulty() {
       clearInterval(this.interval)
       this.interval = setInterval(this.move, this.difficulty);
-    }
+	},
+	updateWinStatus() {
+		let self = this
+        let userlist = database.ref('room/' + self.room + '/users')
+        userlist.on('value', function (snapshot) {
+          let getStat = snapshot.val()
+          if (localStorage.getItem('user_id') === Object.keys(getStat)[0]) {
+            let loser = database.ref('room/' + self.room + '/users/' + Object.keys(getStat)[0])
+            loser.update({
+              status : 'death'
+            })
+            let winner = database.ref('room/' + self.room + '/users/' + Object.keys(getStat)[1])
+            winner.update({
+              status : 'life'
+            })
+          } else {
+            let loser = database.ref('room/' + self.room + '/users/' + Object.keys(getStat)[1])
+            loser.update({
+              status : 'death'
+            })
+            let winner = database.ref('room/' + self.room + '/users/' + Object.keys(getStat)[0])
+            winner.update({
+              status : 'life'
+            })
+          }
+        })
+	}
   },
 }
 </script>
