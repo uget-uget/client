@@ -26,6 +26,7 @@
 </template>
 <script>
 import firebase,{ functions } from 'firebase'
+import database from '../assets/config'
 
 
 export default {
@@ -44,21 +45,6 @@ export default {
     },
     mounted(){
         //localStorage.setItem('room', 'room1')
-      
-        var config = {
-            apiKey: "AIzaSyBa8sAhAyZppmkwFsE-9cB0nno0WcvurXc",
-            authDomain: "list-player-41db2.firebaseapp.com",
-            databaseURL: "https://list-player-41db2.firebaseio.com",
-            projectId: "list-player-41db2",
-            storageBucket: "list-player-41db2.appspot.com",
-            messagingSenderId: "815573183322"
-        };
-
-        firebase.initializeApp(config);
-        
-        
-        const database = firebase.database()
-        this.database = database
        
         let roomName = localStorage.getItem('room')
         const roomRef = database.ref(`room/${roomName}`)
