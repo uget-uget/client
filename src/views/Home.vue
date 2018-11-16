@@ -1,41 +1,48 @@
 <template>
   	<div>
-			<div v-if="!gameOver">
-				<p>Score: <b>{{ score }}</b></p>
-				<div v-if="game_on" class="game">
-					<span v-for="x in list" :key='list.indexOf(x)' :data-id="x" class="px">
-						<span v-for="y in list" :key='list.indexOf(y)' :data-id="y" class="px col" 
-							:class="{
-								test: testCoord(x,y),
-								head: isHead(x,y), 
-								snake: isSnake(x,y), 
-								food: isFood(x,y), 
-								poison: isPoison(x,y), 
-								booster: isBooster(x,y), 
-								slower: isSlower(x,y), 
-								bomb1: isBomb(x,y), 
-								bomb2: isBomb2(x,y), 
-								bomb3: isBomb3(x,y), 
-								bomb4: isBomb4(x,y)}">
-								</span>
-					</span>
+		  <div class="row">
+			  <div class="col-3">
+				  <mylistplayer></mylistplayer>
+			  </div>
+			  <div class="col-9">
+				<div v-if="!gameOver">
+					<p>Score: <b>{{ score }}</b></p>
+					<div v-if="game_on" class="game">
+						<span v-for="x in list" :key='list.indexOf(x)' :data-id="x" class="px">
+							<span v-for="y in list" :key='list.indexOf(y)' :data-id="y" class="px col" 
+								:class="{
+									test: testCoord(x,y),
+									head: isHead(x,y), 
+									snake: isSnake(x,y), 
+									food: isFood(x,y), 
+									poison: isPoison(x,y), 
+									booster: isBooster(x,y), 
+									slower: isSlower(x,y), 
+									bomb1: isBomb(x,y), 
+									bomb2: isBomb2(x,y), 
+									bomb3: isBomb3(x,y), 
+									bomb4: isBomb4(x,y)}">
+									</span>
+						</span>
+					</div>
+					<div>
+						<h4>Select Difficulty:</h4>
+						<select name="" id="" v-model='difficulty'>
+							<option value="300">Baby</option>
+							<option value="100">Professional</option>
+							<option value="30">God of Snake Game</option>
+								<option value="0">More than Imposible</option>
+						</select>
+						<button @click='changeDifficulty'>Change</button>
+					</div>
 				</div>
-				<div>
-					<h4>Select Difficulty:</h4>
-					<select name="" id="" v-model='difficulty'>
-						<option value="300">Baby</option>
-						<option value="100">Professional</option>
-						<option value="30">God of Snake Game</option>
-							<option value="0">More than Imposible</option>
-					</select>
-					<button @click='changeDifficulty'>Change</button>
+				<!-- Ending -->
+				<div v-else>
+					<h1>You Lose!! {{ msg }}</h1>
+					<button @click="restart">New Game</button>
 				</div>
-			</div>
-			<!-- Ending -->
-			<div v-else>
-				<h1>You Lose!! {{ msg }}</h1>
-				<button @click="restart">New Game</button>
-			</div>
+			  </div>
+		  </div>
 			
 		</div>
 </template>
@@ -44,10 +51,13 @@
 // @ is an alias to /src
 import HelloWorld from '@/components/HelloWorld.vue'
 
+//import components list_player.vue
+import mylistplayer from '@/components/list_player.vue'
+
 export default {
   name: 'home',
   components: {
-    HelloWorld
+    HelloWorld, mylistplayer
   },
   data: function(){
 		return {
