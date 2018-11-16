@@ -5,13 +5,75 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width,initial-scale=1.0">
     <link rel="icon" href="<%= BASE_URL %>favicon.ico">
-    <title>client</title>
+    <title>snake-vuecli</title>
+    <style>
+      body{
+        background-image: url('https://im.indiatimes.in/content/2018/Aug/snake_game_1533210447.jpg')
+      }
+  
+      div#app {
+         text-align: center;
+         margin-top: 100px;
+      }
+  
+      .game{
+         height: 500px;
+      }
+  
+      .px {
+        width: 40px;
+        height: 40px;
+        background: white;
+           display: inline-block;
+      }
+      .px.col{
+        display: block;
+      }
+      .test {
+        /* background: red; */
+      }
+      .head {
+        background-image: url('https://i.pinimg.com/originals/40/d9/ec/40d9ecdc44884b15e648b9f205ec3885.jpg');
+        background-size: contain;
+      }
+      .snake{
+        background-image: url('https://nationalzoo.si.edu/sites/default/files/styles/480x240_scale_and_crop/public/animals/burmesepython-001.jpg?itok=aXepriQv');
+        background-size: contain;
+      }
+      .food{
+        /* background: lightgreen; */
+        background-image: url('https://openclipart.org/image/2400px/svg_to_png/238164/1453327427.png') !important;
+        background-size: contain;
+      }
+      .poison{
+        background: rgb(231, 142, 142);
+        background-image: url('http://s3-us-west-2.amazonaws.com/capitalradio-code/wp-content/uploads/2018/09/Poison.png');
+        background-size: contain;
+      }
+      .booster{
+        /* background: yellow; */
+        background-image: url('https://images.vexels.com/media/users/3/143426/isolated/preview/b9b84ffc510491704ecd0c5838a56271-lightning-bolt-yellow-symbol-by-vexels.png');
+        background-size: contain;
+      }
+      .slower{
+        background-image: url('https://images.all-free-download.com/images/graphicthumb/realistic_snails_vector_design_575774.jpg');
+        background-size: contain;
+      }
+      .bomb1, .bomb2, .bomb3, .bomb4{
+        background-image: url('https://cdn.pixabay.com/photo/2018/02/23/10/48/bomb-3175208__340.png');
+        background-size: contain;
+      }
+    </style>
   </head>
   <body>
     <noscript>
-      <strong>We're sorry but client doesn't work properly without JavaScript enabled. Please enable it to continue.</strong>
+      <strong>We're sorry but snake-vuecli doesn't work properly without JavaScript enabled. Please enable it to continue.</strong>
     </noscript>
     <div id="app"></div>
+      <audio controls loop>
+        <source src="8-punk-8-bit-music.mp3" type="audio/mpeg">
+        Your browser does not support the audio element.
+      </audio>
     <!-- built files will be auto injected -->
   </body>
 </html>
