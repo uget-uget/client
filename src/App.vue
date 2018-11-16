@@ -4,9 +4,25 @@
       <router-link to="/">Home</router-link> |
       <router-link to="/about">About</router-link>
     </div>
-    <router-view/>
+    <router-view :endScore = 'score' @gameOver = "finalScore"/>
   </div>
 </template>
+
+<script>
+export default {
+  data () {
+    return {
+      score: 0
+    }
+  },
+  methods: {
+    finalScore (value) {
+      this.score = value
+    }
+  }
+}
+</script>
+
 
 <style>
 #app {
@@ -15,6 +31,7 @@
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
+  margin-top: 0 !important;
 }
 #nav {
   padding: 30px;

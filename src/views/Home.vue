@@ -95,6 +95,11 @@ export default {
 		
 	},
 	methods: {
+		playAudio (link) {
+			let audio = new Audio()
+			audio.src = link
+			audio.play()
+		},
 		init(){
 			this.newGame();
 			window.addEventListener('keydown', this.changeDirection);
@@ -137,6 +142,7 @@ export default {
 			this.newGame()
 		},
 		move(){
+			
 			var self = this;
 			var last = self.snake[self.snake.length-1];
 
@@ -160,9 +166,13 @@ export default {
 				 (x == (this.bomb[1].x) && y == (this.bomb[1].y)) ||
 				 (x == (this.bomb[2].x) && y == (this.bomb[2].y)) ||
 				 (x == this.bomb[3].x && y == (this.bomb[3].y))) {
+
+				this.playAudio('Bomb-SoundBible.com-891110113.mp3')
 				self.msg = 'Game Over!, you eat a bomb stupid...'
 				self.gameOver = true
 				clearInterval(this.interval)
+				this.$emit('gameOver', this.score)
+				this.$router.replace('/ending')
 			}
 
 
@@ -209,6 +219,8 @@ export default {
 					self.msg = 'Game over. due to you eat yourself,  Your score: ' + this.score
 					self.gameOver = true;
 					clearInterval(this.interval)
+					this.$emit('gameOver', this.score)
+					this.$router.replace('/ending')
 				}
 			}
 
@@ -277,6 +289,7 @@ export default {
 			}
 		},
 		eat(){
+			this.playAudio('Bite-SoundBible.com-2056759375.mp3')
 			this.snakeLenth += 1;
 			this.food = this.getRand();
 			this.poison = this.getRand();
@@ -296,10 +309,12 @@ export default {
 			}
 		},
 		poisoned() {
+			this.playAudio('Toxic Goo-SoundBible.com-392739082.mp3')
 			this.snakeLenth--;
 			this.poison = this.getRand();
 		},
 		boosting() {
+			this.playAudio('Electric Shock Zap-SoundBible.com-68983399.mp3')
 			clearInterval(this.interval)
 			this.interval = setInterval(this.move, (this.difficulty * 1/2) );
 			setTimeout(()=>{
@@ -308,6 +323,7 @@ export default {
 			}, 4000)
 		},
 		slowing() {
+			this.playAudio('Slug Crawling-SoundBible.com-2052984959.mp3')
 			clearInterval(this.interval)
 			this.interval = setInterval(this.move, (this.difficulty * 2) );
 			setTimeout(()=>{
